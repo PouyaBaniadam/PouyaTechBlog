@@ -1,0 +1,270 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<link href="{% static 'js/like_ajax.js' %}" rel="stylesheet">
+
+{% block home_page %}
+    class="tm-nav-item"
+{% endblock %}
+
+{% block contact_us %}
+    class="tm-nav-item"
+{% endblock %}
+
+{% block title %}
+    {{ post_detail_objects.title }}
+{% endblock %}
+
+{% block content %}
+    <body>
+    <div class="container-fluid">
+        <main class="tm-main">
+            <div class="row tm-row">
+                <div class="col-12">
+                    <hr class="tm-hr-primary tm-mb-55">
+                    <img style="border-radius: 20px" src="{{ post_detail_objects.image.url }}"
+                         alt="{{ post_detail_objects.author }}"
+                         class="img-fluid">
+                    <br> <br>
+                </div>
+            </div>
+            <div class="row tm-row">
+                <div class="col-lg-8 tm-post-col">
+                    <div class="tm-post-full">
+                        <div class="mb-4">
+                            <h2
+                                    class="pt-2 tm-color-primary tm-post-title">{{ post_detail_objects.title }}</h2>
+                            <br>
+                            <div class="alert alert-primary"
+                                 style="max-width: 180px; max-height: 45px; display: inline-block">
+                                <h6>
+                                    {{ post_detail_objects.created_at.year }}
+                                    / {{ post_detail_objects.created_at.month }}
+                                    / {{ post_detail_objects.created_at.day }}
+                                </h6>
+                            </div>
+                            <div class="alert alert-danger"
+                                 style="max-width: 180px; max-height: 45px; align-items: center; display: inline-block">
+                                <h6>
+                                    {{ post_detail_objects.created_at.hour }}
+                                    : {{ post_detail_objects.created_at.minute }}
+                                    : {{ post_detail_objects.created_at.second }}
+                                </h6>
+                            </div>
+                            <br>
+                            <p>Author ✍️ :
+                                <a href="{% url 'home_app:profile' post_detail_objects.author post_detail_objects.author.id %}">{{ post_detail_objects.author }}</a>
+                            </p>
+                            <hr>
+                            <p>
+                                {{ post_detail_objects.body|linebreaks }}
+                            </p>
+                            <hr>
+                            <br>
+                            {% if is_liked %}
+                                <a href="{% url 'post_detail_app:like' post_detail_objects.slug post_detail_objects.id %}"><i
+                                        style="color: red; font-size: 20px"
+                                        class="fa fa-heart"> {{ post_detail_objects.likes.all.count }}</i></a>
+                            {% else %}
+                                <a href="{% url 'post_detail_app:like' post_detail_objects.slug post_detail_objects.id %}"><i
+                                        style="color: black; font-size: 20px"
+                                        class="fa fa-heart"> {{ post_detail_objects.likes.all.count }}</i></a>
+                            {% endif %}
+                            <br>
+                            {% if is_disliked %}
+                                <a href="{% url 'post_detail_app:dislike' post_detail_objects.slug post_detail_objects.id %}"><i
+                                        style="color:red; font-size: 20px"
+                                        class="fa fa-heart-broken"> {{ post_detail_objects.dislikes.all.count }}</i></a>
+                            {% else %}
+                                <a href="{% url 'post_detail_app:dislike' post_detail_objects.slug post_detail_objects.id %}"><i
+                                        style="color:black; font-size: 20px"
+                                        class="fa fa-heart-broken"> {{ post_detail_objects.dislikes.all.count }}</i></a>
+                            {% endif %}
+                            <br>
+                            <hr>
+                            <br>
+                            <div class="alert alert-info"
+                                 style="width: fit-content; height: fit-content;">Categories
+                            </div>
+                            <br>
+                            <span class="tm-color-primary">
+                                    {% if post_detail_objects.category.all.0 %}
+                                        <h4>
+                                        #{{ post_detail_objects.category.all.0 }}
+                                        </h4>
+                                    {% endif %}
+                                {% if post_detail_objects.category.all.1 %}
+                                    <h4>
+                                        #{{ post_detail_objects.category.all.1 }}
+                                    </h4>
+                                {% endif %}
+                                {% if post_detail_objects.category.all.2 %}
+                                    <h4>
+                                    #{{ post_detail_objects.category.all.2 }}
+                                    </h4>
+                                {% endif %}
+                                {% if post_detail_objects.category.all.3 %}
+                                    <h4>
+                                     #{{ post_detail_objects.category.all.3. }}
+                                    </h4>
+                                {% endif %}
+                                {% if post_detail_objects.category.all.4 %}
+                                    <h4>
+                                     #{{ post_detail_objects.category.all.4 }}
+                                    </h4>
+                                {% endif %}
+                        </div>
+
+                        <!-- Comments -->
+                        <div>
+                            <h2 class="tm-color-primary tm-post-title">Comments</h2>
+                            <hr class="tm-hr-primary tm-mb-55">
+
+                            <form class="mb-5 tm-comment-form" method="post">
+                                {% csrf_token %}
+                                <h2 class="tm-color-primary tm-post-title mb-4">Your comment</h2>
+                                <input type="hidden" id="parent_id" name="parent_id" value="">
+                                <div class="mb-4">
+                                    {% if error_message %}
+                                        <div style="border-top-left-radius: 50px;border-bottom-right-radius: 50px;
+                                         border-top-right-radius: 20px;border-bottom-left-radius: 20px; text-align: center"
+                                             class="alert alert-danger">{{ error_message }}</div>
+                                    {% endif %}
+                                    <br>
+                                    <textarea style="border-radius: 15px;" class="form-control" name="body" id="body"
+                                              rows="6" placeholder="Max length (1000 characters)"
+                                              maxlength=1000></textarea>
+                                </div>
+                                <div class="text-right">
+                                    <button class="tm-btn tm-btn-primary tm-btn-small">Submit</button>
+                                </div>
+                            </form>
+                            {% for comment in post_detail_objects.comments.all %}
+                                {% if comment.parent == None %}
+                                    {% if comment.is_allowed %}
+                                        <div class="tm-comment tm-mb-45">
+                                            <figure class="tm-comment-figure">
+                                                {% for comment_sender_profile in comment_sender_profiles %}
+                                                    {% if comment_sender_profile == comment.user %}
+                                                        {% if comment.user.profile.image %}
+                                                            <a href="{% url 'home_app:profile' comment_sender_profile.username comment_sender_profile.id %}">
+                                                                <img style="max-height: 100px; max-width: 100px"
+                                                                     src="{{ comment.user.profile.image.url }}"
+                                                                     alt="{{ comment.user }}"
+                                                                     class="mb-2 rounded-circle img-thumbnail">
+                                                                <figcaption
+                                                                        class="tm-color-primary text-center">{{ comment.user }}</figcaption>
+                                                            </a>
+                                                        {% else %}
+                                                            <a href="{% url 'home_app:profile' comment_sender_profile.username comment_sender_profile.id %}">
+                                                                <img style="max-width: 100px; max-height: 100px"
+                                                                     src="{% static 'img/default-male-profile.png' %}"
+                                                                     alt="{{ comment.user }}"
+                                                                     class="mb-2 rounded-circle img-thumbnail">
+                                                                <figcaption
+                                                                        class="tm-color-primary text-center">{{ comment.user }}</figcaption>
+                                                            </a>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </figure>
+                                            <div>
+                                                <p>
+                                                    {{ comment.body }}
+                                                </p>
+                                                <div class="d-flex justify-content-between">
+
+                                                    <button class="btn btn-outline-info"
+                                                            onclick="set_value({{ comment.id }})">REPLY
+                                                    </button>
+                                                </div>
+                                                <span class="d-block text-right tm-color-primary">{{ comment.created_at }}</span>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% for reply in comment.replies.all %}
+                                        {% if reply.is_allowed %}
+                                            <div class="tm-comment-reply tm-mb-45">
+                                                <hr>
+                                                <div class="tm-comment">
+                                                    {% for reply_sender_profile in reply_sender_profiles %}
+                                                        {% if reply_sender_profile == reply.user %}
+                                                            {% if reply.user.profile.image %}
+                                                                <a href="{% url 'home_app:profile' reply_sender_profile.username reply_sender_profile.id %}">
+                                                                    <img style="max-height: 100px; max-width: 100px"
+                                                                         src="{{ reply.user.profile.image.url }}"
+                                                                         alt="{{ reply.user }}"
+                                                                         class="mb-2 rounded-circle img-thumbnail">
+                                                                    <figcaption
+                                                                            class="tm-color-primary text-center">{{ reply.user }}</figcaption>
+                                                                </a>
+                                                            {% else %}
+                                                                <a href="{% url 'home_app:profile' reply_sender_profile.username reply_sender_profile.id %}">
+                                                                    <img style="max-width: 100px; max-height: 100px"
+                                                                         src="{% static 'img/default-male-profile.png' %}"
+                                                                         alt="{{ reply.user }}"
+                                                                         class="mb-2 rounded-circle img-thumbnail">
+                                                                    <figcaption
+                                                                            class="tm-color-primary text-center">{{ reply.user }}</figcaption>
+                                                                </a>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    <p>
+                                                        {{ reply.body }}
+                                                    </p>
+                                                </div>
+                                                <span class="d-block text-right tm-color-primary">{{ reply.created_at }}</span>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <aside class="col-lg-4 tm-aside-col">
+                    <hr class="mb-3 tm-hr-primary">
+                    <h2 class="mb-4 tm-post-title tm-color-primary">Most clicked on</h2>
+                    <ul class="tm-mb-75 pl-5 tm-category-list">
+                        {% for most_clicked_on in most_clicked_ones %}
+                            {% if most_clicked_on.is_allowed %}
+                                <li><a href="{% url 'post_detail_app:post_detail' most_clicked_on.slug %}"
+                                       class="tm-color-primary"> 🔥 {{ most_clicked_on.title }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+
+                    <div class="tm-post-sidebar">
+                        <hr class="mb-3 tm-hr-primary">
+                        <h2 class="mb-4 tm-post-title tm-color-primary">Latest updates</h2>
+                        <ul class="tm-mb-75 pl-5 tm-category-list">
+                            {% for latest_post in latest_posts %}
+                                {% if latest_post.is_allowed %}
+                                    <li><a href="{% url 'post_detail_app:post_detail' latest_post.slug %}"
+                                           class="tm-color-primary"> ⌚ {{ latest_post.title }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                        {#                    <hr class="mb-3 tm-hr-primary">#}
+                        {#                    <h2 class="tm-mb-40 tm-post-title tm-color-primary">All Categories</h2>#}
+                        {#                    {% for cat in categories %}#}
+                        {#                        <a href="#" class="d-block tm-mb-40">#}
+                        {#                            <figure>#}
+                        {#                                <a href="{% url 'post_detail_app:category_detail' cat.id %}">#}
+                        {#                                    <figcaption class="tm-color-primary">#{{ cat.title }}#}
+                        {#                                    </figcaption>#}
+                        {#                                </a>#}
+                        {#                            </figure>#}
+                        {#                        </a>#}
+                        {#                    {% endfor %}#}
+                    </div>
+                </aside>
+                <script>
+                    function set_value(id) {
+                        document.getElementById('parent_id').value = id
+                        window.location.href = "#body"
+                    }
+                </script>
+    </body>
+{% endblock %}

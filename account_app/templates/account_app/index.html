@@ -1,0 +1,67 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login / Signup | PouyaLj Blog</title>
+    <link rel="stylesheet" href="{% static "style.css" %}">
+    <link rel="stylesheet" href="{% static "css/register_login.css" %}">
+    <link rel="shortcut icon" href="{% static 'img/Join.png' %}">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<!DOCTYPE html>
+<html>
+{#<head>#}
+{#	<title>Slide Navbar</title>#}
+{#	<link rel="stylesheet" type="text/css" href="{% static "slide navbar style.css" %}">#}
+{#<link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">#}
+{#</head>#}
+<body>
+<div class="main">
+    <input type="checkbox" id="chk" aria-hidden="true">
+    <div class="signup">
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label style="" for="chk" aria-hidden="true">Register</label>
+            {% if register_form.username_for_register.errors %}
+                <h5 style="color: red; margin-bottom: -20px">{{ register_form.username_for_register.errors }}</h5>
+            {% endif %}
+            {{ register_form.username_for_register }}
+            {% if register_form.email_for_register.errors %}
+                <h5 style="color: red; margin-bottom: -20px">{{ register_form.email_for_register.errors }}</h5>
+            {% endif %}
+            {{ register_form.email_for_register }}
+            {% if register_form.non_field_errors %}
+                <h5 style="color: red; margin-bottom: -20px">{{ register_form.non_field_errors }}</h5>
+            {% endif %}
+            {{ register_form.password_for_register }}
+            {{ register_form.repeated_password_for_register }}
+            <button type="submit">Register</button>
+            <a style=" color: white; margin-left: 150px; font-size: 20px"
+               href="{% url 'home_app:home' %}">Back</a>
+        </form>
+    </div>
+    <div class="login">
+        <form method="post">
+            {% csrf_token %}
+            <label for="chk" aria-hidden="true">Login</label>
+            {% if login_form.password_for_login.errors %}
+                <h5 style="color: red;">{{ login_form.password_for_login.errors }}</h5>
+            {% endif %}
+            {{ login_form.username_for_login }}
+            {{ login_form.password_for_login }}
+            <button type="submit">Login</button>
+            <a style=" color: #6d44b8; margin-left: 150px; font-size: 20px"
+               href="{% url 'home_app:home' %}">Back</a>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+<!-- partial -->
+</body>
+</html>

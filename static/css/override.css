@@ -1,0 +1,10 @@
+@font-face {
+    font-family: "Mikhak-Light";
+    src: url("../fonts/Mikhak-Light.ttf");
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    font-family: "Mikhak-Light", serif;
+}

@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    PouyaTech Blog
+{% endblock %}
+
+{% block home_page %}
+    class="tm-nav-item active"
+{% endblock %}
+
+{% block contact_us %}
+    class="tm-nav-item"
+{% endblock %}
+
+{% block add_post %}
+    class="tm-nav-item"
+{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid">
+        <main class="tm-main">
+            <div class="row tm-row">
+                {% for post_object in post_objects %}
+                    {% if post_object.is_allowed %}
+                        <article class="col-12 col-md-6 tm-post">
+                            <hr class="tm-hr-primary">
+                            {% if request.user.is_authenticated %}
+                                <a href="{% url 'post_detail_app:post_detail' post_object.slug %}"
+                                   class="effect-lily tm-post-link tm-pt-60">
+                            {% else %}
+                                <a href="{% url 'account_app:join' %}"
+                                   class="effect-lily tm-post-link tm-pt-60">
+                            {% endif %}
+                            <div class="tm-post-link-inner">
+                                <img src="{{ post_object.image.url }}" alt="{{ post_object.title }}"
+                                     class="img-fluid" style="max-height: 600px; min-height: 600px">
+                            </div>
+                            {#                            <span class="position-absolute tm-new-badge">New</span>#}
+                            <h2
+                                    class="tm-pt-30 tm-color-primary tm-post-title">{{ post_object.title }}</h2>
+                            </a>
+                            <p class="tm-pt-30">
+                                {{ post_object.body|truncatewords:50|truncatechars:50 }}
+                            </p>
+                            <div class="d-flex justify-content-between tm-pt-45">
+                                <span class="tm-color-primary">
+                                    {% if post_object.category.all.0 %}
+                                        #{{ post_object.category.all.0 }}
+                                    {% endif %}
+                                    <br>
+                                    {% if post_object.category.all.1 %}
+                                        #{{ post_object.category.all.1 }}
+                                    {% endif %}
+                                    <br>
+                                    {% if post_object.category.all.2 %}
+                                        #{{ post_object.category.all.2 }}
+                                    {% endif %}
+                                    <br>
+                                    {% if post_object.category.all.3 %}
+                                        #{{ post_object.category.all.3 }}
+                                    {% endif %}
+                                    <br>
+                                    {% if post_object.category.all.4 %}
+                                        #{{ post_object.category.all.4 }}
+                                    {% endif %}</span>
+                            </div>
+                            <div style="display: inline-block"
+                                 class="alert alert-primary">{{ post_object.created_at.year }}
+                                / {{ post_object.created_at.month }} / {{ post_object.created_at.day }}</div>
+                            <div style="display: inline-block"
+                                 class="alert alert-danger">{{ post_object.created_at.hour }}
+                                : {{ post_object.created_at.minute }} : {{ post_object.created_at.second }}</div>
+                            {% for author in all_authors %}
+                                {% if author == post_object.author %}
+                                    <div class="d-flex justify-content-between">
+                                        <span class="tm-color-primary">Author ✍️ : <a
+                                                href="{% url 'home_app:profile' author author.id %}">{{ post_object.author }}</a></span>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                            <hr>
+                        </article>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% if post_objects.has_other_pages %}
+                <div class="row tm-row tm-mt-100 tm-mb-75">
+                    <div class="tm-prev-next-wrapper">
+                        {% if post_objects.has_previous %}
+                            <a href="?page={{ post_objects.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                               class="mb-2 tm-btn tm-btn-primary tm-prev-next tm-mr-20">Prev</a>
+                        {% else %}
+                            <a href=""
+                               class="mb-2 tm-btn tm-btn-primary tm-prev-next disabled tm-mr-20">Prev</a>
+                        {% endif %}
+                        {% if post_objects.has_next %}
+                            <a href="?page={{ post_objects.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                               class="mb-2 tm-btn tm-btn-primary tm-prev-next">Next</a>
+                        {% else %}
+                            <a href="" class="mb-2 tm-btn tm-btn-primary tm-prev-next disabled">Next</a>
+                        {% endif %}
+                    </div>
+                    <div class="tm-paging-wrapper">
+                        <span class="d-inline-block mr-3">Page</span>
+                        <nav class="tm-paging-nav d-inline-block">
+                            <ul>
+                                {% for item in post_objects.paginator.page_range %}
+                                    {% if post_objects.number == item %}
+                                        <li class="tm-paging-item active">
+                                            <a href="?page={{ item }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                                               class="mb-2 tm-btn tm-paging-link">{{ item }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="tm-paging-item">
+                                            <a href="?page={{ item }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                                               class="mb-2 tm-btn tm-paging-link">{{ item }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            {% endif %}
+        </main>
+    </div>
+
+{% endblock %}

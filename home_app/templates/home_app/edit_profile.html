@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contact_us %}
+    class="tm-nav-item active"
+{% endblock %}
+
+{% block title %}
+    {{ request.user }}'s edit profile
+{% endblock %}
+
+{% block profile %}
+    class="tm-nav-item active"
+{% endblock %}
+
+{% block home_page %}
+    class="tm-nav-item"
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <main class="tm-main">
+
+            <div class="row tm-row tm-mb-45">
+                <div class="col-12">
+                    <hr class="tm-hr-primary tm-mb-55">
+                </div>
+            </div>
+            <div class="row tm-row tm-mb-120">
+                <div class="col-12">
+                    <h2 class="tm-color-primary tm-post-title tm-mb-60">Edit</h2>
+                </div>
+                <div class="col-lg-7 tm-contact-left">
+                    <form method="POST" action="" class="mb-5 ml-auto mr-0 tm-contact-form"
+                          enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% if profile_edit_form.non_field_errors %}
+                            <div class="alert alert-danger" style=" border-top-left-radius: 50px;
+                             border-bottom-right-radius: 50px; border-top-right-radius: 20px;
+                             border-bottom-left-radius: 20px; display: inline-block; align-content: center">
+                                {{ profile_edit_form.non_field_errors }}
+                            </div>
+                        {% endif %}
+                        {% if error != None %}
+                            <div class="alert alert-danger" style=" border-top-left-radius: 50px;
+                             border-bottom-right-radius: 50px; border-top-right-radius: 20px;
+                             border-bottom-left-radius: 20px; display: inline-block; align-content: center">
+                                {{ error }}
+                            </div>
+                        {% endif %}
+                        {% if profile_edit_form.username_label.errors %}
+                            <div class="alert alert-danger" style=" border-top-left-radius: 50px;
+                             border-bottom-right-radius: 50px; border-top-right-radius: 20px;
+                             border-bottom-left-radius: 20px; display: inline-block; align-content: center">
+                                {{ profile_edit_form.username_label.errors }}
+                            </div>
+                        {% else %}
+                            {% if username_taken == 'This username has been already taken!' %}
+                                <div class="alert alert-danger" style=" border-top-left-radius: 50px;
+                             border-bottom-right-radius: 50px; border-top-right-radius: 20px;
+                             border-bottom-left-radius: 20px; display: inline-block; align-content: center">
+                                    <li style="color: black">
+                                        {{ username_taken }}
+                                    </li>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                        <div class="form-group row mb-4">
+                            <label style="font-size: 20px"
+                                   class="col-sm-3 col-form-label text-right tm-color-primary">Username</label>
+                            <div class="col-sm-9">
+                                {{ profile_edit_form.username_label }}
+                            </div>
+                        </div>
+                        {% if profile_edit_form.first_name.errors %}
+                            <div class="alert alert-danger" style=" border-top-left-radius: 50px;
+                             border-bottom-right-radius: 50px; border-top-right-radius: 20px;
+                             border-bottom-left-radius: 20px; display: inline-block; align-content: center">
+                                {{ profile_edit_form.first_name.errors }}
+                            </div>
+                        {% endif %}
+                        <div class="form-group row mb-4">
+                            <label style="font-size: 20px"
+                                   class="col-sm-3 col-form-label text-right tm-color-primary">First name</label>
+                            <div class="col-sm-9">
+                                {{ profile_edit_form.first_name }}
+                            </div>
+                        </div>
+                        {% if profile_edit_form.last_name.errors %}
+                            <div class="alert alert-danger" style=" border-top-left-radius: 50px;
+                             border-bottom-right-radius: 50px; border-top-right-radius: 20px;
+                             border-bottom-left-radius: 20px; display: inline-block; align-content: center">
+                                {{ profile_edit_form.last_name.errors }}
+                            </div>
+                        {% endif %}
+                        <div class="form-group row mb-4">
+                            <label style="font-size: 20px"
+                                   class="col-sm-3 col-form-label text-right tm-color-primary">Last name</label>
+                            <div class="col-sm-9">
+                                {{ profile_edit_form.last_name }}
+                            </div>
+                        </div>
+                        {% if profile_edit_form.bio.errors %}
+                            <div class="alert alert-danger" style=" border-top-left-radius: 50px;
+                             border-bottom-right-radius: 50px; border-top-right-radius: 20px;
+                             border-bottom-left-radius: 20px; display: inline-block; align-content: center">
+                                {{ profile_edit_form.bio.errors }}
+                            </div>
+                        {% endif %}
+                        <div class="form-group row mb-4">
+                            <label style="font-size: 20px"
+                                   class="col-sm-3 col-form-label text-right tm-color-primary">Bio</label>
+                            <div class="col-sm-9">
+                                {{ profile_edit_form.bio }}
+                            </div>
+                        </div>
+                        {% if profile_edit_form.email.errors %}
+                            <div class="alert alert-danger" style="border-top-left-radius: 50px;
+                             border-bottom-right-radius: 50px; border-top-right-radius: 20px;
+                             border-bottom-left-radius: 20px; display: inline-block; align-content: center">
+                                {{ profile_edit_form.email.errors }}
+                            </div>
+                        {% endif %}
+                        <div class="form-group row mb-4">
+                            <label style="font-size: 20px"
+                                   class="col-sm-3 col-form-label text-right tm-color-primary">E-mail</label>
+                            <div class="col-sm-9" style="pointer-events: none;">
+                                {{ profile_edit_form.email }}
+                            </div>
+                        </div>
+                        <div class="form-group row mb-4">
+                            <label style="font-size: 20px"
+                                   class="col-sm-3 col-form-label text-right tm-color-primary">Image</label>
+                            <div class="col-sm-9">
+                                {{ profile_edit_form.image }}
+                            </div>
+                        </div>
+                        <div class="form-group row mb-4">
+                            <label style="font-size: 20px"
+                                   class="col-sm-3 col-form-label text-right tm-color-primary">Gender</label>
+                            <div class="col-sm-9">
+                                {{ profile_edit_form.gender }}
+                            </div>
+                        </div>
+                        <div class="form-group row mb-4">
+                            <label style="font-size: 20px"
+                                   class="col-sm-3 col-form-label text-right tm-color-primary">Birth date</label>
+                            <div class="col-sm-9">
+                                {{ profile_edit_form.birth_date }}
+                            </div>
+                        </div>
+                        <div class="form-group row text-right">
+                            <div class="col-12">
+                                <button class="tm-btn tm-btn-primary tm-btn-small">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}
+
+

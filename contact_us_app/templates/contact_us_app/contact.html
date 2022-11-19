@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contact_us %}
+    class="tm-nav-item active"
+{% endblock %}
+
+{% block home_page %}
+    class="tm-nav-item"
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <main class="tm-main">
+
+            <div class="row tm-row tm-mb-45">
+                <div class="col-12">
+                    <hr class="tm-hr-primary tm-mb-55">
+                </div>
+            </div>
+            <div class="row tm-row tm-mb-120">
+                <div class="col-12">
+                    <h2 class="tm-color-primary tm-post-title tm-mb-60">Contact Us</h2>
+                </div>
+                <div class="col-lg-7 tm-contact-left">
+                    <form method="POST" action="" class="mb-5 ml-auto mr-0 tm-contact-form">
+                        {% csrf_token %}
+                        {% if status_of_sent_message == "Your message has been sent successfully!✅" %}
+                            <div class="alert alert-primary"
+                                 style="font-size: 22px; border-top-left-radius: 50px; border-bottom-right-radius: 50px;
+                                         border-top-right-radius: 20px; border-bottom-left-radius: 20px; display: inline-block; align-content: center">
+                                {{ status_of_sent_message }}
+                            </div>
+                        {% endif %}
+                        <div class="form-group row mb-4">
+                            <label for="name" class="col-sm-3 col-form-label text-right tm-color-primary">Name</label>
+                            <div class="col-sm-9">
+                                {% if form.name.errors %}
+                                    <div class="alert alert-danger"
+                                         style="font-size: 22px; border-top-left-radius: 50px; border-bottom-right-radius: 50px;
+                                         border-top-right-radius: 20px; border-bottom-left-radius: 20px; display: inline-block; align-content: center">
+                                        {{ form.name.errors }}
+                                    </div>
+                                {% endif %}
+                                {{ form.name }}
+                            </div>
+                        </div>
+                        <div class="form-group row mb-4">
+                            <label for="subject"
+                                   class="col-sm-3 col-form-label text-right tm-color-primary">Subject</label>
+                            <div class="col-sm-9">
+                                {% if form.subject.errors %}
+                                    <div class="alert alert-danger"
+                                         style="font-size: 22px; border-top-left-radius: 50px; border-bottom-right-radius: 50px;
+                                         border-top-right-radius: 20px; border-bottom-left-radius: 20px; display: inline-block; align-content: center">
+                                        {{ form.subject.errors }}
+                                    </div>
+                                {% endif %}
+                                {{ form.subject }}
+                            </div>
+                        </div>
+                        <div class="form-group row mb-4">
+                            <label for="email" class="col-sm-3 col-form-label text-right tm-color-primary">Email</label>
+                            <div class="col-sm-9">
+                                {% if form.email.errors %}
+                                    <div class="alert alert-danger"
+                                         style="font-size: 22px; border-top-left-radius: 50px; border-bottom-right-radius: 50px;
+                                         border-top-right-radius: 20px; border-bottom-left-radius: 20px; display: inline-block; align-content: center">
+                                        {{ form.email.errors }}
+                                    </div>
+                                {% endif %}
+                                {{ form.email }}
+                            </div>
+                        </div>
+                        <div class="form-group row mb-5">
+                            <label for="message"
+                                   class="col-sm-3 col-form-label text-right tm-color-primary">Message</label>
+                            <div class="col-sm-9">
+                                {% if form.message.errors %}
+                                    <div class="alert alert-danger"
+                                         style="font-size: 22px; border-top-left-radius: 50px; border-bottom-right-radius: 50px;
+                                         border-top-right-radius: 20px; border-bottom-left-radius: 20px; display: inline-block; align-content: center">
+                                        {{ form.message.errors }}
+                                    </div>
+                                {% endif %}
+                                {{ form.message }}
+                            </div>
+                        </div>
+                        <div class="form-group row text-right">
+                            <div class="col-12">
+                                <button class="tm-btn tm-btn-primary tm-btn-small">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-lg-5 tm-contact-right">
+                    <address class="mb-4 tm-color-gray">
+                        {{ contact_us_info.address }}
+                    </address>
+                    <span class="d-block">
+                        Tel:
+                        <a href="tel:{{ contact_us_info.number }}"
+                           class="tm-color-gray">{{ contact_us_info.number }}</a>
+                    </span>
+                    <span class="mb-4 d-block">
+                        Email:
+                        <a href="mailto:{{ contact_us_info.email }}"
+                           class="tm-color-gray">{{ contact_us_info.email }}</a>
+                    </span>
+                    <p class="mb-5 tm-line-height-short">
+                        {{ contact_us_info.who_are_we }}
+                    </p>
+                    <ul class="tm-social-links">
+                        <li class="mb-2">
+                            <a href="{{ contact_us_info.youtube }}"
+                               class="d-flex align-items-center justify-content-center">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{{ contact_us_info.telegram }}"
+                               class="d-flex align-items-center justify-content-center">
+                                <i class="fab fa-telegram-plane"></i>
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{{ contact_us_info.instagram }}"
+                               class="d-flex align-items-center justify-content-center mr-0">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}
+
+

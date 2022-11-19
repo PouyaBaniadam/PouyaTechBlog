@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block add_post %}
+    class="tm-nav-item active"
+{% endblock %}
+
+{% block contact_us %}
+    class="tm-nav-item"
+{% endblock %}
+
+{% block home_page %}
+    class="tm-nav-item"
+{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid">
+        <main class="tm-main">
+
+            <div class="row tm-row tm-mb-45">
+                <div class="col-12">
+                    <hr class="tm-hr-primary tm-mb-55">
+
+                </div>
+            </div>
+            <div class="row tm-row tm-mb-120">
+                <div class="col-12">
+                    <h2 class="tm-color-primary tm-post-title tm-mb-60">Add post</h2>
+                </div>
+                <div class="col-lg-7 tm-contact-left">
+                    <form method="POST" action="" class="mb-5 ml-auto mr-0 tm-contact-form"
+                          enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% if success_message %}
+                            <div class="alert alert-primary" style="font-size: 22px; border-top-left-radius: 50px; border-bottom-right-radius: 50px;
+                                         border-top-right-radius: 20px; border-bottom-left-radius: 20px; display: inline-block; align-content: center">
+                                {{ success_message }}
+                            </div>
+                        {% endif %}
+                        {% if add_post_form.non_field_errors %}
+                            <div class="alert alert-danger" style="font-size: 22px; border-top-left-radius: 50px; border-bottom-right-radius: 50px;
+                                         border-top-right-radius: 20px; border-bottom-left-radius: 20px; display: inline-block; align-content: center">
+                                {{ add_post_form.non_field_errors }}
+                            </div>
+                        {% endif %}
+                        <div class="form-group row mb-4">
+                            <label for="title" style="font-size: 22px; border-top-left-radius: 50px; border-bottom-right-radius: 50px;
+                                         border-top-right-radius: 20px; border-bottom-left-radius: 20px; display: inline-block; align-content: center"
+                                   class="col-sm-3 col-form-label text-right tm-color-primary">Title</label>
+                            {% if add_post_form.title.errors %}
+                                <div class="alert alert-danger" style="font-size: 22px; border-top-left-radius: 50px; border-bottom-right-radius: 50px;
+                                         border-top-right-radius: 20px; border-bottom-left-radius: 20px; display: inline-block; align-content: center">
+                                    {{ add_post_form.title.errors }}
+                                </div>
+                            {% endif %}
+                            {{ add_post_form.title }}
+                        </div>
+                        <div class="form-group row mb-4">
+                            <label for="body" style="font-size: 22px; border-top-left-radius: 50px; border-bottom-right-radius: 50px;
+                                         border-top-right-radius: 20px; border-bottom-left-radius: 20px; display: inline-block; align-content: center"
+                                   class="col-sm-3 col-form-label text-right tm-color-primary">Body</label>
+                            {% if add_post_form.body.errors %}
+                                <div class="alert alert-danger" style="font-size: 22px; border-top-left-radius: 50px; border-bottom-right-radius: 50px;
+                                         border-top-right-radius: 20px; border-bottom-left-radius: 20px; display: inline-block; align-content: center">
+                                    {{ add_post_form.body.errors }}
+                                </div>
+                            {% endif %}
+                            {{ add_post_form.body }}
+                        </div>
+                        <div class="form-group row mb-4">
+                            <label for="category" style="font-size: 22px; border-top-left-radius: 50px; border-bottom-right-radius: 50px;
+                                         border-top-right-radius: 20px; border-bottom-left-radius: 20px; display: inline-block; align-content: center"
+                                   class="col-sm-3 col-form-label text-right tm-color-primary">Category</label>
+                            {% if add_post_form.category.errors %}
+                                <div class="alert alert-danger" style="font-size: 22px; border-top-left-radius: 50px; border-bottom-right-radius: 50px;
+                                         border-top-right-radius: 20px; border-bottom-left-radius: 20px; display: inline-block; align-content: center">
+                                    {{ add_post_form.category.errors }}
+                                </div>
+                            {% endif %}
+                            {{ add_post_form.category }}
+                        </div>
+                        <div class="form-group row mb-4">
+                            <label for="image" style="font-size: 22px; border-top-left-radius: 50px; border-bottom-right-radius: 50px;
+                                         border-top-right-radius: 20px; border-bottom-left-radius: 20px; display: inline-block; align-content: center"
+                                   class="col-sm-3 col-form-label text-right tm-color-primary">Image</label>
+                            {{ add_post_form.image }}
+                        </div>
+                        <div class="form-group row text-right">
+                            <div class="col-12">
+                                <button class="tm-btn tm-btn-primary tm-btn-small">Create</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+{% endblock %}

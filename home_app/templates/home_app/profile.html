@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ personal_data.username }}'s profile
+{% endblock %}
+
+{% block profile %}
+    class="tm-nav-item active"
+{% endblock %}
+
+{% block home_page %}
+    class="tm-nav-item"
+{% endblock %}
+
+{% block contact_us %}
+    class="tm-nav-item"
+{% endblock %}
+
+{% block add_post %}
+    class="tm-nav-item"
+{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid">
+        <main class="tm-main">
+            {% if personal_data.profile.image %}
+                <img class="mb-2 rounded-circle img-thumbnail"
+                     style="max-height: 250px; max-width: 250px; margin-right: auto; margin-left: auto; display: block"
+                     src="{{ personal_data.profile.image.url }}" alt="Profile picture">
+            {% elif personal_data.profile.gender == "male" %}
+                <img class="mb-2 rounded-circle img-thumbnail"
+                     style="max-height: 250px; max-width: 250px; margin-right: auto; margin-left: auto; display: block"
+                     src="{% static 'img/default-male-profile.png' %}" alt="Profile picture">
+            {% elif personal_data.profile.gender == "female" %}
+                <img class="mb-2 rounded-circle img-thumbnail"
+                     style="max-height: 250px; max-width: 250px; margin-right: auto; margin-left: auto; display: block"
+                     src="{% static 'img/default-female-profile.png' %}" alt="Profile picture">
+            {% else %}
+                <img class="mb-2 rounded-circle img-thumbnail"
+                     style="max-height: 250px; max-width: 250px; margin-right: auto; margin-left: auto; display: block"
+                     src="{% static 'img/anonymous-profile.jpg' %}" alt="Profile picture">
+            {% endif %}
+            {% if personal_data.first_name %}
+                <h4>
+                    <p style="display: inline-block; font-size: 25px">👤 Name
+                        : </p> {{ personal_data.first_name }} {{ personal_data.last_name }}
+                </h4>
+            {% endif %}
+            {% if personal_data.profile.bio %}
+                <h5 style="color: red;">
+                    ️ <p style="display: inline-block; font-size: 25px">✍️ Bio : </p> {{ personal_data.profile.bio }}
+                </h5>
+            {% endif %}
+            {% if personal_data.profile.birth_date %}
+                <h5 style="color: blue;">
+                    ️ <p style="display: inline-block; font-size: 25px">🎂 Birthday
+                    : </p> {{ personal_data.profile.birth_date.year }} / {{ personal_data.profile.birth_date.month }}
+                    / {{ personal_data.profile.birth_date.day }}
+                </h5>
+            {% endif %}
+            <br>
+            {% if personal_data.profile.username == request.user %}
+                {% if personal_data.is_staff %}
+                    <div style="width: fit-content; height: fit-content; margin: auto; margin-bottom: 50px; margin-top: -35px"
+                         class="alert alert-primary">⭐{{ personal_data.username }}⭐
+                    </div>
+                {% else %}
+                    <div style="width: fit-content; height: fit-content; margin: auto; margin-bottom: 50px; margin-top: -35px"
+                         class="alert alert-primary">{{ personal_data.username }}
+                    </div>
+                {% endif %}
+            {% else %}
+                {% if personal_data.is_staff == True %}
+                    <div style="width: fit-content; height: fit-content; margin: auto; margin-bottom: 50px; margin-top: -35px"
+                         class="alert alert-danger">⭐{{ personal_data.username }}⭐
+                    </div>
+                {% else %}
+                    <div style="width: fit-content; height: fit-content; margin: auto; margin-bottom: 50px; margin-top: -35px"
+                         class="alert alert-danger">{{ personal_data.username }}
+                    </div>
+                {% endif %}
+            {% endif %}
+            {% if request.user == personal_data.profile.username %}
+                <a href="{% url 'home_app:edit_profile' %}">
+                    <button style="display: block; margin: auto" class="btn btn-outline-info">
+                        Edit
+                        profile
+                    </button>
+                </a>
+                <br>
+                {% if personal_data.is_superuser %}
+                    <a target="_blank" href="/admin">
+                        <button style="margin: auto; display: block; margin-top: -35px; margin-bottom: -10px; margin-top: 1px"
+                                class="btn btn-outline-danger">
+                            Go to admin page
+                        </button>
+                    </a>
+                    <br>
+                {% endif %}
+            {% endif %}
+            {% if request.user == personal_data.profile.username %}
+                {% if post_datas.count < 2 %}
+                    <div style="text-align: center" class="alert alert-primary">{{ post_datas.count }} post</div>
+                {% else %}
+                    <div style="text-align: center" class="alert alert-primary">{{ post_datas.count }} posts</div>
+                {% endif %}
+            {% else %}
+                {% if post_datas.count < 2 %}
+                    <div style="text-align: center" class="alert alert-danger">{{ post_datas.count }} post</div>
+                {% else %}
+                    <div style="text-align: center" class="alert alert-danger">{{ post_datas.count }} posts</div>
+                {% endif %}
+            {% endif %}
+            <br>
+            <div class="row tm-row">
+                {% for post_object in post_list %}
+                    {% if post_object.is_allowed %}
+                        <article class="col-12 col-md-6 tm-post">
+                            <hr class="tm-hr-primary">
+                            {% if request.user.is_authenticated %}
+                                <a href="{% url 'post_detail_app:post_detail' post_object.slug %}"
+                                   class="effect-lily tm-post-link tm-pt-60">
+                            {% else %}
+                                <a href="{% url 'account_app:join' %}"
+                                   class="effect-lily tm-post-link tm-pt-60">
+                            {% endif %}
+                            <div class="tm-post-link-inner">
+                                <img src="{{ post_object.image.url }}" alt="{{ post_object.title }}"
+                                     class="img-fluid" style="max-height: 600px; min-height: 600px">
+                            </div>
+                            {#                            <span class="position-absolute tm-new-badge">New</span>#}
+                            <h2
+                                    class="tm-pt-30 tm-color-primary tm-post-title">{{ post_object.title }}</h2>
+                            </a>
+                            <p class="tm-pt-30">
+                                {{ post_object.body|truncatewords:30|truncatechars:50 }}
+                            </p>
+                            <div class="d-flex justify-content-between tm-pt-45">
+                                <span class="tm-color-primary">
+                                    {% if post_object.category.all.0 %}
+                                        #{{ post_object.category.all.0 }}
+                                    {% endif %}
+                                    <br>
+                                    {% if post_object.category.all.1 %}
+                                        #{{ post_object.category.all.1 }}
+                                    {% endif %}
+                                    <br>
+                                    {% if post_object.category.all.2 %}
+                                        #{{ post_object.category.all.2 }}
+                                    {% endif %}
+                                    <br>
+                                    {% if post_object.category.all.3 %}
+                                        #{{ post_object.category.all.3 }}
+                                    {% endif %}
+                                    <br>
+                                    {% if post_object.category.all.4 %}
+                                        #{{ post_object.category.all.4 }}
+                                    {% endif %}</span>
+                            </div>
+                            <div style="display: inline-block"
+                                 class="alert alert-primary">{{ post_object.created_at.year }}
+                                / {{ post_object.created_at.month }} / {{ post_object.created_at.day }}</div>
+                            <div style="display: inline-block"
+                                 class="alert alert-danger">{{ post_object.created_at.hour }}
+                                : {{ post_object.created_at.minute }} : {{ post_object.created_at.second }}</div>
+                            <div class="d-flex justify-content-between">
+                                <span class="tm-color-primary">Author ✍️ : {{ post_object.author }}</span>
+                            </div>
+                            <hr>
+                        </article>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% if post_list.has_other_pages %}
+                <div class="row tm-row tm-mt-100 tm-mb-75">
+                    <div class="tm-prev-next-wrapper">
+                        {% if post_list.has_previous %}
+                            <a href="?page={{ post_list.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                               class="mb-2 tm-btn tm-btn-primary tm-prev-next tm-mr-20">Prev</a>
+                        {% else %}
+                            <a href=""
+                               class="mb-2 tm-btn tm-btn-primary tm-prev-next disabled tm-mr-20">Prev</a>
+                        {% endif %}
+
+                        {% if post_list.has_next %}
+                            <a href="?page={{ post_list.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                               class="mb-2 tm-btn tm-btn-primary tm-prev-next">Next</a>
+                        {% else %}
+                            <a href="" class="mb-2 tm-btn tm-btn-primary tm-prev-next disabled">Next</a>
+                        {% endif %}
+                    </div>
+                    <div class="tm-paging-wrapper">
+                        <span class="d-inline-block mr-3">Page</span>
+                        <nav class="tm-paging-nav d-inline-block">
+                            <ul>
+                                {% for item in post_list.paginator.page_range %}
+                                    {% if post_list.number == item %}
+                                        <li class="tm-paging-item active">
+                                            <a href="?page={{ item }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                                               class="mb-2 tm-btn tm-paging-link">{{ item }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="tm-paging-item">
+                                            <a href="?page={{ item }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                                               class="mb-2 tm-btn tm-paging-link">{{ item }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            {% endif %}
+        </main>
+    </div>
+
+{% endblock %}
