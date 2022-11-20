@@ -645,8 +645,8 @@ a:hover figcaption {
 /* Hide sidebar */
 @media (max-width: 991px) {
     .tm-header {
-        width: 320px;
-        left: -320px;
+        width: 260px;
+        left: -260px;
         transition: all 0.3s ease;
     }
 
@@ -672,7 +672,7 @@ a:hover figcaption {
     }
 
     .tm-header.show .navbar-toggler {
-        left: 320px;
+        left: 260px;
     }
 
     .tm-main {
