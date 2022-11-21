@@ -24,7 +24,9 @@ for _ in range(datetime.datetime.today().year - 101, datetime.datetime.today().y
 class ProfileEditForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ("username_label", "first_name", "last_name", "bio", "email", "image", "gender", "birth_date")
+        fields = (
+            "username_label", "first_name", "last_name", "bio", "email", "image", "gender", "birth_date",
+            "phone_number")
         widgets = {
             "username_label": forms.TextInput(
                 attrs={"class": "form-control mr-0 ml-auto", "placeholder": "Max length (200 characters)",
@@ -41,16 +43,20 @@ class ProfileEditForm(forms.ModelForm):
             "email": forms.EmailInput(
                 attrs={"class": "form-control mr-0 ml-auto", "placeholder": "Max length (∞ characters)",
                        "style": "font-size: 20px; border-radius: 20px; color: red; border-color: red"}),
+            "phone_number": forms.TextInput(
+                attrs={"class": "form-control mr-0 ml-auto", "placeholder": "Max length (20 characters)",
+                       "style": "font-size: 20px; border-radius: 20px; color: red; border-color: red"}),
             "image": forms.FileInput(
                 attrs={"class": "form-control mr-0 ml-auto", "placeholder": "Max length (75 characters)",
                        "style": "font-size: 20px; border-radius: 20px"}),
             "gender": forms.Select(
                 attrs={"class": "form-control mr-0 ml-auto", "placeholder": "Max length (75 characters)",
-                       "style": "font-size: 20px; border-radius: 20px"}),
+                       "style": "font-size: 20px; border-radius: 20px; color: red; border-color: red"}),
             "birth_date": forms.SelectDateWidget(years=birth_date_choices,
                                                  attrs={"class": "form-control mr-0 ml-auto",
                                                         "placeholder": "Max length (75 characters)",
-                                                        "style": "font-size: 20px; border-radius: 20px"}),
+                                                        "style": "font-size: 20px; border-radius: 20px;"
+                                                                 "color: red; border-color: red"}),
         }
 
     def clean_username_label(self):
@@ -78,7 +84,7 @@ class ProfileEditForm(forms.ModelForm):
         except:
             email_exists = None
 
-        if email_exists != None and email_exists != self.cleaned_data.get("email"):
+        if email_exists is not None and email_exists != self.cleaned_data.get("email"):
             raise ValidationError("This E-mail has been already taken!")
 
         return email
@@ -105,11 +111,25 @@ class ProfileEditForm(forms.ModelForm):
 
         return last_name
 
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get("phone_number")
+
+        try:
+            phone_number_exists = Profile.objects.get(phone_number=phone_number)
+            phone_number_exists = phone_number_exists.phone_number
+        except:
+            phone_number_exists = None
+
+        if phone_number_exists is not None and phone_number_exists != self.cleaned_data.get("phone_number"):
+            raise ValidationError("This Phone number has been already taken!")
+
+        return phone_number
+
     def clean(self):
         first_name = self.cleaned_data.get("first_name")
         last_name = self.cleaned_data.get("last_name")
 
-        if last_name == None and first_name != None:
+        if last_name is None and first_name is not None:
             raise ValidationError("If you have a first name , You should fill your last name too!")
-        elif first_name == None and last_name != None:
+        elif first_name is None and last_name is not None:
             raise ValidationError("If you have a last name , You should fill your first name too!")

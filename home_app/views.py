@@ -67,7 +67,8 @@ def edit_profile(request):
         profile = Profile.objects.get(username=request.user)
         profile_edit_form = ProfileEditForm(instance=profile)
         if request.method == "POST":
-            profile_edit_form = ProfileEditForm(request.POST, request.FILES, instance=profile)
+            profile_edit_form = ProfileEditForm(request.POST, request.FILES,
+                                                instance=profile)
             if profile_edit_form.is_valid():
                 all_usernames = []
                 for _ in User.objects.all():
@@ -103,5 +104,12 @@ def edit_profile(request):
 
         return render(request, "home_app/edit_profile.html",
                       context={"profile_edit_form": profile_edit_form})
+
     else:
+        return redirect("home_app:home")
+
+
+def delete_profile(request):
+    if request.user.is_authenticated:
+        request.user.delete()
         return redirect("home_app:home")

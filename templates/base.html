@@ -39,14 +39,14 @@
                     <li {% block profile %} {% endblock %} class="tm-nav-item">
                         <a href="{% url 'home_app:profile' request.user request.user.id %}"
                            class="tm-nav-link">
-                            <i class="fa fa-edit"></i>
+                            <i class="fa fa-user-edit"></i>
                             Profile
                         </a></li>
                 {% else %}
                     <li class="tm-nav-item">
                         <a href="{% url 'account_app:join' %}"
                            class="tm-nav-link">
-                            <i class="fa fa-edit"></i>
+                            <i class="fa fa-user-edit"></i>
                             Profile
                         </a></li>
                 {% endif %}
